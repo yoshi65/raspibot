@@ -1,0 +1,11 @@
+# Object files
+*.dat
+*.json
+# from MacOSX
+.DS_Store
+# Emacs backup files
+*~
+# Vim
+.*.swp
+# Python cache
+__pycache__
