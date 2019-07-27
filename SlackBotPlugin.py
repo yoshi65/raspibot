@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2019-07-26 13:39:50 +0900
+# LastModified: 2019-07-27 09:33:25 +0900
 #
 
 import re
@@ -26,7 +26,7 @@ def record(message, *something):
     ir = irrp(pi,
               GPIO=18,
               FILE='pigpio.json',
-              ID=[name],
+              ID=name,
               POST=130,
               NO_CONFIRM=True)
     ir.record()
