@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-04 14:58:27 +0900
+# LastModified: 2020-05-04 07:03:15 +0100
 #
 
 import json
@@ -17,6 +17,8 @@ from irrp_class import irrp
 
 def format_json():
     file_name = 'pigpio.json'
+    max_length = 300
+
     with open(file_name, 'r') as f:
         d = json.load(f)
 
