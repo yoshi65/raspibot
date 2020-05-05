@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-05 13:36:16 +0900
+# LastModified: 2020-05-05 13:39:44 +0900
 #
 
 import json
@@ -17,6 +17,8 @@ from irrp_class import irrp
 
 def format_json():
     file_name = 'pigpio.json'
+    max_length = 300
+
     with open(file_name, 'r') as f:
         d = json.load(f)
 
@@ -73,12 +75,16 @@ def play(message, *something):
 
     name = message.body['text'].replace('Play ', '')
 
+    id_list = list()
+    for i in range(4):
+        id_list.append(f'{name}{i}')
+
     # id is set for daikin
     # if your signal is short, you set `ID=[name]`
     ir = irrp(pi,
               GPIO=17,
               FILE='pigpio.json',
-              ID=[f'{name}0', f'{name}1'],
+              ID=id_list,
               POST=130,
               GAP=1)
     ir.playback()
