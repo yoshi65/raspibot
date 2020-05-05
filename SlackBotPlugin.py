@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-05 13:39:44 +0900
+# LastModified: 2020-05-05 05:58:26 +0100
 #
 
 import json
@@ -17,7 +17,6 @@ from irrp_class import irrp
 
 def format_json():
     file_name = 'pigpio.json'
-    max_length = 300
 
     with open(file_name, 'r') as f:
         d = json.load(f)
@@ -25,17 +24,18 @@ def format_json():
     d_new = dict()
     for k in d.keys():
         if re.search('[0-9]$', k):
+            d_new[k] = d[k]
+        else:
             i_post = 0
             num = 0
-            for i in range(len(d)):
-                if d[i] > 10000:
-                    d_new[f'{cs}{num}'] = d[i_post:(i+1)]
+            d_tmp = d[k]
+            for i in range(len(d_tmp)):
+                if d_tmp[i] > 10000:
+                    d_new[f'{k}{num}'] = d_tmp[i_post:(i+1)]
                     i_post = i+1
                     num += 1
             if i_post < i+1:
-                d_new[f'{cs}{num}'] = d[i_post:(i+1)]
-        else:
-            d_new[k] = d[k]
+                d_new[f'{k}{num}'] = d_tmp[i_post:(i+1)]
 
     with open(file_name, 'w') as f:
         json.dump(d_new, f, indent=4)
