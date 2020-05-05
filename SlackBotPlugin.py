@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-04 14:58:27 +0900
+# LastModified: 2020-05-05 13:36:16 +0900
 #
 
 import json
@@ -22,12 +22,16 @@ def format_json():
 
     d_new = dict()
     for k in d.keys():
-        if len(d[k]) > max_length:
-            l = len(d[k]) // max_length + 1
-            List = d[k]
-            for i in range(l):
-                d_new[f'{k}{i}'] = \
-                    List[max_length*i:(max_length*(i+1) if i != l - 1 else len(List))]
+        if re.search('[0-9]$', k):
+            i_post = 0
+            num = 0
+            for i in range(len(d)):
+                if d[i] > 10000:
+                    d_new[f'{cs}{num}'] = d[i_post:(i+1)]
+                    i_post = i+1
+                    num += 1
+            if i_post < i+1:
+                d_new[f'{cs}{num}'] = d[i_post:(i+1)]
         else:
             d_new[k] = d[k]
 
