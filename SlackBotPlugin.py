@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-06 10:09:35 +0900
+# LastModified: 2020-05-06 18:01:00 +0900
 #
 
 import json
@@ -82,7 +82,7 @@ def play(message, *something):
             id_list.append(f'{name}{i}')
         elif i == 0:
             message.reply(f'Not found {name}')
-            exit(0)
+            return
         else:
             break
 
