@@ -3,7 +3,7 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-05 05:58:26 +0100
+# LastModified: 2020-05-06 10:09:35 +0900
 #
 
 import json
@@ -44,20 +44,20 @@ def format_json():
 @listen_to('Record .*')
 @respond_to('Record .*')
 def record(message, *something):
+    file_name = 'pigpio.json'
+    name = message.body['text'].replace('Record ', '')
+
     pi = pigpio.pi()
     if not pi.connected:
         exit(0)
 
-    name = message.body['text'].replace('Record ', '')
-
     ir = irrp(pi,
               GPIO=18,
-              FILE='pigpio.json',
+              FILE=file_name,
               ID=name,
               POST=130,
               NO_CONFIRM=True)
     ir.record()
-
     message.reply(f'Recorded {name}')
 
     format_json()
@@ -69,26 +69,38 @@ def record(message, *something):
 @listen_to('Play .*')
 @respond_to('Play .*')
 def play(message, *something):
+    file_name = 'pigpio.json'
+    name = message.body['text'].replace('Play ', '')
+
+    with open(file_name, 'r') as f:
+        d = json.load(f)
+
+    id_list = list()
+    i = 0
+    while 1:
+        if f'{name}{i}' in d:
+            id_list.append(f'{name}{i}')
+        elif i == 0:
+            message.reply(f'Not found {name}')
+            exit(0)
+        else:
+            break
+
+        i += 1
+
     pi = pigpio.pi()
     if not pi.connected:
         exit(0)
-
-    name = message.body['text'].replace('Play ', '')
-
-    id_list = list()
-    for i in range(4):
-        id_list.append(f'{name}{i}')
 
     # id is set for daikin
     # if your signal is short, you set `ID=[name]`
     ir = irrp(pi,
               GPIO=17,
-              FILE='pigpio.json',
+              FILE=file_name,
               ID=id_list,
               POST=130,
               GAP=1)
     ir.playback()
-
     message.reply(f'Played {name}')
 
     pi.stop()
