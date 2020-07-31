@@ -3,10 +3,14 @@
 #
 # FileName: 	slackbot_settings
 # CreatedDate:  2019-07-19 12:28:20 +0900
-# LastModified: 2019-07-26 12:58:04 +0900
+# LastModified: 2020-08-01 00:05:00 +0900
 #
 
-with open('APIToken.dat', 'r') as f:
+from pathlib import Path
+
+
+api_token = Path(__file__).parent.resolve() / 'APIToken.dat'
+with open(api_token, 'r') as f:
     tmp = f.read().replace('\n', '')
 API_TOKEN = tmp
 
