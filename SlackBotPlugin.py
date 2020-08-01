@@ -3,11 +3,12 @@
 #
 # FileName: 	SlackBotPlugin
 # CreatedDate:  2019-07-19 12:32:53 +0900
-# LastModified: 2020-05-06 18:01:00 +0900
+# LastModified: 2020-08-01 10:20:57 +0900
 #
 
 import json
 import re
+from pathlib import Path
 
 import pigpio
 from slackbot.bot import listen_to, respond_to
@@ -16,9 +17,9 @@ from irrp_class import irrp
 
 
 def format_json():
-    file_name = 'pigpio.json'
+    file_path = Path(__file__).parent.resolve() / 'pigpio.json'
 
-    with open(file_name, 'r') as f:
+    with open(file_path, 'r') as f:
         d = json.load(f)
 
     d_new = dict()
@@ -37,14 +38,14 @@ def format_json():
             if i_post < i+1:
                 d_new[f'{k}{num}'] = d_tmp[i_post:(i+1)]
 
-    with open(file_name, 'w') as f:
+    with open(file_path, 'w') as f:
         json.dump(d_new, f, indent=4)
 
 
 @listen_to('Record .*')
 @respond_to('Record .*')
 def record(message, *something):
-    file_name = 'pigpio.json'
+    file_path = Path(__file__).parent.resolve() / 'pigpio.json'
     name = message.body['text'].replace('Record ', '')
 
     pi = pigpio.pi()
@@ -53,7 +54,7 @@ def record(message, *something):
 
     ir = irrp(pi,
               GPIO=18,
-              FILE=file_name,
+              FILE=file_path,
               ID=name,
               POST=130,
               NO_CONFIRM=True)
@@ -69,10 +70,10 @@ def record(message, *something):
 @listen_to('Play .*')
 @respond_to('Play .*')
 def play(message, *something):
-    file_name = 'pigpio.json'
+    file_path = Path(__file__).parent.resolve() / 'pigpio.json'
     name = message.body['text'].replace('Play ', '')
 
-    with open(file_name, 'r') as f:
+    with open(file_path, 'r') as f:
         d = json.load(f)
 
     id_list = list()
@@ -96,7 +97,7 @@ def play(message, *something):
     # if your signal is short, you set `ID=[name]`
     ir = irrp(pi,
               GPIO=17,
-              FILE=file_name,
+              FILE=file_path,
               ID=id_list,
               POST=130,
               GAP=1)
